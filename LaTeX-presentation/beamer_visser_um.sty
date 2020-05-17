@@ -1,0 +1,75 @@
+\ProvidesPackage{beamer_visser_um}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% Author: 	Ubbo Visser, Department of Computer Science, University of
+%             	Miami
+% Date: 	November 2009
+% Description: This package provides the UM colors for the LaTeX beamer	
+%           
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% ------------------------------------------------------------
+% THEMES
+% ------------------------------------------------------------
+\useoutertheme[subsection=false]{smoothbars}
+\setbeamertemplate{footline}[text line]{} % makes the footer EMPTY
+\usetheme{Warsaw} 
+
+% ------------------------------------------------------------
+% BEAMERSTUFF BEAMERSTUFF BEAMERSTUFF BEAMERSTUFF BEAMERSTUFF
+% ------------------------------------------------------------
+
+\definecolor{Red}{rgb}{1,0,0}
+\definecolor{Blue}{rgb}{0,0,1}
+\definecolor{Green}{rgb}{0,1,0}
+\definecolor{magenta}{rgb}{1,0,.6}
+\definecolor{lightblue}{rgb}{0,.5,1}
+\definecolor{lightpurple}{rgb}{.6,.4,1}
+\definecolor{gold}{rgb}{.6,.5,0}
+\definecolor{orange}{rgb}{1,0.4,0}
+\definecolor{light_orange}{rgb}{.5,0.4,0}
+\definecolor{hotpink}{rgb}{1,0,0.5}
+\definecolor{newcolor2}{rgb}{.5,.3,.5}
+\definecolor{newcolor}{rgb}{0,.3,1}
+\definecolor{newcolor3}{rgb}{1,0,.35}
+\definecolor{darkgreen1}{rgb}{0, .35, 0}
+\definecolor{darkgreen}{rgb}{0, .6, 0}
+\definecolor{darkred}{rgb}{.75,0,0}
+
+% ------------------------------------------------------------
+% UM Color scheme
+% ------------------------------------------------------------
+\definecolor{UM_nav_green}{rgb}{.21,.40,.20}
+\definecolor{UM_green_dark}{RGB}{122,153,112}
+\definecolor{UM_green_light}{RGB}{232,235,199}
+\definecolor{UM_green_light}{rgb}{.91,.92,.78}
+\definecolor{UM_beige_dark}{rgb}{0.86,0.8,0.57}
+\definecolor{UM_beige_light}{rgb}{0.87,0.84,0.64}
+\definecolor{UM_orange_dark}{RGB}{214,112,38}
+\definecolor{UM_orange_light}{RGB}{215,179,105}
+\definecolor{UM_beige}{RGB}{254,233,170}
+\definecolor{white}{RGB}{255,255,255}
+\definecolor{black}{RGB}{0,0,0}
+
+\setbeamercolor*{palette secondary}{fg=black,bg=UM_green_light}
+\setbeamercolor*{palette tertiary}{fg=UM_green_light,bg=UM_orange_dark}
+\setbeamercolor*{palette quaternary}{fg=black,bg=UM_green_dark}
+
+\setbeamercolor*{item projected}{bg=UM_orange_dark,fg=white}
+
+\setbeamercolor{titlelike}{bg=UM_orange_dark}
+\setbeamercolor{block title}{bg=UM_green_dark}
+\setbeamercolor{block body}{bg=UM_green_light}
+
+\setbeamercolor{section in sidebar}{parent=palette sidebar primary}
+\setbeamercolor{structure}{fg=black}
+
+\setbeamercolor*{separation line}{}
+\setbeamercolor*{fine separation line}{}
+
+% ------------------------------------------------------------
+% Titlepage logo
+% ------------------------------------------------------------
+\newcommand{\putat}[3]{\begin{picture}(0,0)(0,0)\put(#1,#2){#3}\end{picture}}

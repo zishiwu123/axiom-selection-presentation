@@ -1,0 +1,332 @@
+\makeatletter\let\ifGm@compatii\relax\makeatother
+\documentclass[ucs,10pt]{beamer}
+\mode<presentation>
+%\hypersetup{pdfpagemode=FullScreen}
+
+\usepackage{beamerthemesplit}
+\usepackage{beamer_visser_um}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+%\usepackage{paralist}
+%\usepackage[all]{xy}
+%\usepackage{enumerate}
+%\usepackage[ruled,vlined,lined,boxed,commentsnumbered]{algorithm2e}
+%\usepackage{multirow}
+%
+%\usepackage[T1]{fontenc}
+%\usepackage{listings}
+%\usepackage{courier}
+%\lstset{
+%	 language=SPARQL,
+%	 basicstyle=\footnotesize\ttfamily, % Standardschrift
+%         %numbers=left,               % Ort der Zeilennummern
+%         numberstyle=\tiny,          % Stil der Zeilennummern
+%         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+%         numbersep=5pt,              % Abstand der Nummern zum Text
+%         tabsize=2,                  % Groesse von Tabs
+%         extendedchars=true,         %
+%         breaklines=true,            % Zeilen werden Umgebrochen
+%         keywordstyle=\color{blue},
+%    		frame=single,         
+% %        keywordstyle=[1]\textbf,    % Stil der Keywords
+% %        keywordstyle=[2]\textbf,    %
+% %        keywordstyle=[3]\textbf,    %
+% %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+%         stringstyle=\color{darkgreen}\ttfamily, % Farbe der String
+%         showspaces=false,           % Leerzeichen anzeigen ?
+%         showtabs=false,             % Tabs anzeigen ?
+%         xleftmargin=10pt,
+%         xrightmargin=10pt,
+%         framexleftmargin=5pt,
+%         framexrightmargin=5pt,
+%         framexbottommargin=4pt,
+%         backgroundcolor=\color{lightgray},
+%         showstringspaces=false      % Leerzeichen in Strings anzeigen ?  
+%}
+%
+
+\setlength{\unitlength}{\textwidth}  % measure in textwidths 
+
+
+\title{Spectral Clustering for Axiom Selection}
+%\title{Design of an engaging conversational agent for embedded systems}
+\subtitle{}
+\author{Zishi Wu}
+\institute{Department of Computer Science\\ University of Miami \\
+\vspace{.20cm}}
+\date{\today}
+\titlegraphic{\putat{-0.52}{-0.1}{\includegraphics[height=1.5cm]{theUlogo}}}
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{\titlepage}
+
+
+\frame{
+  \frametitle{Outline}    
+  \tableofcontents
+  \putat{0.40}{0.15}{\includegraphics[width=.7\textwidth]{figures/intro}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+\frame{
+  \frametitle{Introduction}  
+  \begin{block}{Definitions}
+  	\begin{itemize}
+  		\item What is Automated Theorem Proving (ATP)?
+  		\item \textit{Logical formulae} are statements about a domain:  		
+    	\item Show that the \textit{conjecture} is a 
+    		\textit{logical consequence} of the axioms.	
+		\item Example:
+		\begin{itemize}
+			\item Axiom 1: \textit{All men are mortal}.
+			\item Axiom 2: \textit{Socrates is a man}.
+			\item Conjecture: \textit{Socrates is mortal}.
+		\end{itemize}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.30]{figures/the-death-of-socrates.jpg}
+  		\end{figure}  	
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Logical Consequence}  
+  \begin{block}{Logical Consequence}
+  	\begin{itemize}
+  		\item Every model of the axioms is a model of the conjecture.
+  		\item A set of axioms has a \textit{model} if there is an 
+  			\textit{interpretation}
+  			(assignment) of boolean values to the axioms such that the 
+  			conjunction of the axioms evaluate to \textit{True}.
+  		\item If we list all interpretations of $N$ formulae on a truth table, 
+  			we get $2^{N}$ rows.
+  		\item The faster method is to show that the union of the axioms and 
+  			the negation of the conjecture is \textit{unsatisfiable}. 
+  			$Ax \cup \neg C = \emptyset$
+  		\item In other words, if no model of the axioms is a model of the
+  			negated conjecture, then all models of the axioms are 
+  			models of the conjecture.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Problem Statement}  
+  \begin{block}{Problem Statement}
+  	\begin{itemize}
+  		\item A problem consists of one conjecture to be proven, and a large 
+  			number of axioms to be considered.
+  		\item But the solution set(s) usually consist of a few axioms.
+  		\item How do we select the needed axioms?
+  	\end{itemize}
+  		
+  	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.1]{figures/needle-in-haystack.jpeg}
+  	\end{figure}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Data Summary}  
+  \begin{block}{MPTPTP2078 Dataset}
+  	\begin{itemize}
+  		\item \textbf{MP} = Mizar Problems \cite{Mizar-Urb06}	
+  		\begin{itemize}
+  	  		\item Library of problems in formalized mathematics, 
+  	  			in first-order logic
+  	  		\item Part of the Mizar System, which contains of a proof checker,
+  	  			and a language for writing mathematical definitions and proofs.
+  		\end{itemize}
+  		\item \textbf{TPTP} = Thousands of Problems for Theorem Provers
+  			\cite{Sut17}
+  		\item \textbf{MPTP} = Mizar Problems for Theorem Provers 
+  			\cite{Mizar-Urb06}
+  		\item Two versions of each problem
+  		\begin{itemize}
+  			\item Bushy = smaller version (3 to 40 axioms, 1 to 15 needed)
+  			\item Chainy = larger version (10 to 500 axioms, 2 to 119 needed)	
+  		\end{itemize}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Related Work}
+\frame{
+  \frametitle{Related Work}  
+  \begin{block}{Automated Theorem Proving (ATP) Systems}
+  	\begin{itemize}
+  		\item E \cite{E-Sch13-LPAR}
+  		\item Vampire \cite{Vampire-KV13}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Methodology}
+\frame{
+  \frametitle{Methodology}  
+  \begin{block}{Data Representation}
+  	\begin{itemize}
+  		\item NOTE: this should be a comprehensive summary of the entire
+  			methodology, not details of one part
+  		\item Qinghua designed a dissimilarity metric \cite{Liu2017Metric}
+  		\item Problem is converted into an undirected fully-connected graph
+  		\begin{itemize}
+  			\item Vertices $V$ = $\{$Axioms $\cup$ Conjecture$\}$
+  			\item Edges $E$ = dissimilarity weights between vertices  		
+  		\end{itemize}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Graph Theory}  
+  \begin{block}{Spectral Graph Theory \cite{Chung:1997}}
+  	\begin{itemize}
+  		\item Adjacency matrix $A$ consists of similarity values 
+  			between vertices
+  		\item Degree matrix $D$ is a diagonal matrix where the $i^{th}$ 
+  			element is the sum of the elements of the $i^{th}$ column of $A$
+  		\item Un-normalized Graph Laplacian matrix 
+		\begin{itemize}
+			\item $L = D\ –\ A$
+		\end{itemize}
+		\item Normalized Graph Laplacian matrix contains \textit{features}
+			of the graph
+		\begin{itemize}
+			\item $L_{norm} = I\ –\ (D^{-1/2}\ L\ D^{-1/2})$
+		\end{itemize}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Example Graph}  
+  \begin{block}{Calculate Normalized Laplacian Matrix}
+  	\begin{itemize}
+  		\item Adjacency, Degree, and Un-normalized Graph Laplacian
+  		\[ 
+  		A = \begin{bmatrix}
+		0 & 3 & 0 \\
+		3 & 0 & 1 \\
+		0 & 1 & 0
+		\end{bmatrix} 
+		\quad
+		D = \begin{bmatrix}
+		3 & 0 & 0 \\
+		0 & 4 & 0 \\
+		0 & 0 & 1
+		\end{bmatrix}
+		\quad
+		L = \begin{bmatrix}
+		0 & 3 & 0 \\
+		3 & 0 & 1 \\
+		0 & 1 & 0
+		\end{bmatrix}
+		\]
+		\item Normalized Graph Laplacian
+		\[ 
+  		L_{norm} = \begin{bmatrix}
+		1 & 0 & 0 \\
+		0 & 1 & 0 \\
+		0 & 0 & 1
+		\end{bmatrix} -
+		\begin{bmatrix}
+		\dfrac{1}{\sqrt{3}} & 0 & 0 \\
+		0 & 1/2 & 0 \\
+		0 & 0 & 1
+		\end{bmatrix} 
+		\begin{bmatrix}
+		0 & 3 & 0 \\
+		3 & 0 & 1 \\
+		0 & 1 & 0
+		\end{bmatrix}
+		\begin{bmatrix}
+		\dfrac{1}{\sqrt{3}} & 0 & 0 \\
+		0 & 1/2 & 0 \\
+		0 & 0 & 1
+		\end{bmatrix} 
+		\]
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Selection Method}  
+  \begin{block}{Spectral Clustering \cite{vonLuxburg2007}}
+  	\begin{itemize}
+  		\item Given graph $G = (V, E)$
+  		\item Partition vertices in $V$ into $k$ clusters: 
+  			$C_{1}, C_{2}, ..., C_{k}$
+  		\item Denote the cluster containing the conjecture as $C_{C}$
+  		\item Problem may have more than one set of solutions 
+  		\item Succesful conjecture cluster only needs to contain one solution
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Spectral Clustering Algorithm}  
+  \begin{block}{A Tutorial on Spectral Clustering \cite{vonLuxburg2007}}
+  	\begin{enumerate}
+    	\item Construct a weight matrix W (i.e. adjacency matrix A)
+  		\item Compute the normalized Laplacian matrix $L_{norm}$ from $W$
+		\item Compute the first $k$ eigenvectors $v_{1}, ..., v_{k}$ of 
+			$L_{norm}$ and construct a feature matrix $U$ from those 
+			eigenvectors
+		\item For $i = 1, ..., n$, let $p_{i}$ be the feature vector for the
+			$i^{th}$ vertex, corresponding to the $i^{th}$ row of $U$
+		\item Cluster the vertices based on their feature vectors into 
+			$k$ clusters: $C_{1}, C_{2}, ..., C_{k}$
+  	\end{enumerate}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Spectral Clustering Algorithm}  
+  \begin{block}{K-Means Initialization Problem}
+  	\begin{enumerate}[5]
+    	\item Cluster the feature vectors into k clusters: C1, C2, … , Ck
+  		\begin{itemize}
+  			\item Each run of k-means chooses a different set of initial 
+  				centroids for the $k$ clusters
+			\item Results in different clusterings each run
+			\item We need a deterministic way of clustering that doesn’t 
+				change over multiple runs of k-means
+  		\end{itemize}
+  	\end{enumerate}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{alpha}
+\bibliography{references}
+\end{document}
