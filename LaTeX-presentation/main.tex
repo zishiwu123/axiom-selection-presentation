@@ -78,10 +78,12 @@
   \frametitle{Introduction}  
   \begin{block}{Definitions}
   	\begin{itemize}
-  		\item What is Automated Theorem Proving (ATP)?
-  		\item \textit{Logical formulae} are statements about a domain. 		
+  		\item What is Automated Theorem Proving (ATP)?	
     	\item Show that the \textit{conjecture} is a 
-    		\textit{logical consequence} of the axioms (a.k.a premises).	
+    		\textit{logical consequence} of the axioms.
+    	\item Axioms are also known as \textit{premises}.
+    	\item Together, the conjecture and the axioms of a logic problem
+    		are called the \textit{formulae}.
 		\item Applications:
 			\begin{itemize}
 				\item Formal verification of software - Compilers 
@@ -204,10 +206,13 @@
   				\item Select all axioms whose score is above that threshold.
   			\end{itemize}
   		\item Also a \textit{classification problem}: 
-  			given a feature matrix consisting of the similarity values between 
-  			formulae in a problem, train different machine learning methods on
-  			the data to classify if an axiom is \textit{likely} or 
-  			\textit{unlikely} to be in the proof.
+  			\begin{itemize}
+  				\item Given a feature matrix consisting of the similarity 
+  					values between formulae in a problem, train different 
+  					machine learning methods on the data to classify if an 
+  					axiom is \textit{likely} or \textit{unlikely} to be in 
+  					the proof.
+  			\end{itemize}
   	\end{itemize}	
   \end{block}
 }
@@ -277,8 +282,7 @@
   					\item Fewer total substitutions required equates to a 
   						lower dissimilarity score.
   				\end{itemize}
-  		\item Note that this is a simplication of Qinghua's actual metric,
-  			which is more complicated.
+  		\item Note: this is an over-simplication of the actual metric.
   		\item As expected, for any term $\Delta_{1}$,
 			\textit{dissimilarity($\Delta_{1}$, $\Delta_{1})$} = 0
   	\end{itemize}	
@@ -371,19 +375,19 @@
   \frametitle{Methodology}  
   \begin{block}{Graph Representation}
   	\begin{itemize}
-  		\item Used Extended Hutchinson distance to get dissimilarity values 
+  		\item Use Extended Hutchinson distance to get dissimilarity values 
   			of all pairs of vertices in a problem.
   		\item Let $\Phi_1$ and $\Phi_1$ represent two formulae with 
   		dissimilarity of $dsim(\phi_i,\phi_j)$. We convert dissimilarity 
   		values into similarity values using the following formula:
-  			\begin{itemize}
-  				\item $maxdsim(\mathcal{F}) = max_{\phi_i,\phi_j \in \mathcal{F}} (dsim(\phi_i,\phi_j) \neq \infty)$
-  				\item $sim(\Phi_1,\Phi_2,\mathcal{F}) = \textrm{max}(0, maxdsim(\mathcal{F}) - dsim(\Phi_1,\Phi_2))$
-  			\end{itemize}
+  			\begin{align}
+  				maxdsim(\mathcal{F}) &= max_{\phi_i,\phi_j \in \mathcal{F}} (dsim(\phi_i,\phi_j) \neq \infty) \\
+  				sim(\Phi_1,\Phi_2,\mathcal{F}) &= \textrm{max}(0, maxdsim(\mathcal{F}) - dsim(\Phi_1,\Phi_2))
+  			\end{align}
   		\item The logic problem becomes a fully-connected and undirected graph
   		\begin{itemize}
   			\item Vertices $V$ = $\{$Axioms $\cup$ Conjecture$\}$
-  			\item Edges $E$ = similarity values between vertices  		
+  			\item Edges $E$ = weighted by similarity between vertices  		
   		\end{itemize}
   	\end{itemize}	
   \end{block}
@@ -499,7 +503,6 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Results}
 
 \frame{
   \frametitle{Results}  
@@ -517,16 +520,41 @@
   \frametitle{Conclusion}  
   \begin{block}{Conclusion}
   	\begin{itemize}
-    	\item Spectral clustering method extensions.
-    	\item Dissimilarity method extensions.
-    	\item Mention paper submitted to conference name.
-    	\item Thanks to Qinghua Liu, Zihao Wang, and Dr. Geoff Sutcliffe.
+    	\item Ranking and clustering methods for premise selection depend on
+    		how well the ranking metric (whether based on dissimilarity or
+    		similarity) manages to capture the relationship between the
+    		logical formulae. 
+    	\item If the ranking metric is not good, then it affects everything
+    		downstream. Therefore, the next step is to validate different
+    		ranking metrics, including the Extended Hutchinson Distance.
+    	\item Recent work is being done with graph convolutional neural 
+    		networks to rank the likelihood of axioms contributing towards a
+    		proof. However, these models also depend on a good ranking metric.
   	\end{itemize}
   \end{block}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\frame{
+  \frametitle{Acknowledgements}  
+  \begin{block}{Acknowledgements}
+  	\begin{itemize}
+    	\item Thanks to Qinghua Liu, Zihao Wang, Dr. Geoff Sutcliffe, and
+    		Dr. Kamal Premaratne.
+    	\item Our paper \textit{Evaluation of Axiom Selection Techniques}
+    		was submitted to PAAR 2020 (Workshop on Practical Aspects of 
+    		Automated Reasoning) in May 2020.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bibliography}
+
 \bibliographystyle{alpha}
 \bibliography{references}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \end{document}
