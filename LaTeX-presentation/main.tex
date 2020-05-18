@@ -81,20 +81,37 @@
   		\item What is Automated Theorem Proving (ATP)?
   		\item \textit{Logical formulae} are statements about a domain:  		
     	\item Show that the \textit{conjecture} is a 
-    		\textit{logical consequence} of the axioms.	
-		\item Example:
-		\begin{itemize}
-			\item Axiom 1: \textit{All men are mortal}.
-			\item Axiom 2: \textit{Socrates is a man}.
-			\item Conjecture: \textit{Socrates is mortal}.
-		\end{itemize}
+    		\textit{logical consequence} of the axioms (a.k.a premises).	
+		\item Applications:
+			\begin{itemize}
+				\item Formal verification of software - Compilers 
+					(e.g. gcc, llvm)
+				\item Formal verification of hardware - CPU 
+					(e.g. 1994 Intel Pentium floating-point division bug)
+				\item Interactive proof assistants for mathematics 
+					(e.g. Isabelle, Mizar)
+			\end{itemize}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Introduction}  
+  \begin{block}{Example}
+  	\begin{itemize}
+		\item Axiom 1: \textit{All men are mortal}.
+		\item Axiom 2: \textit{Socrates is a man}.
+		\item Conjecture: \textit{Socrates is mortal}.
 		\begin{figure}[H]
 			\centering
-			\includegraphics[scale=0.30]{figures/the-death-of-socrates.jpg}
+			\includegraphics[scale=0.45]{figures/the-death-of-socrates.jpg}
   		\end{figure}  	
   	\end{itemize}	
   \end{block}
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -104,11 +121,11 @@
   	\begin{itemize}
   		\item Every model of the axioms is a model of the conjecture.
   		\item A set of axioms has a \textit{model} if there is an 
-  			\textit{interpretation}
-  			(assignment) of boolean values to the axioms such that the 
-  			conjunction of the axioms evaluate to \textit{True}.
+  			\textit{interpretation} (assignment of boolean values) to the 
+  			axioms such that the conjunction of the axioms evaluate to 
+  			\textit{True}.
   		\item If we list all interpretations of $N$ formulae on a truth table, 
-  			we get $2^{N}$ rows.
+  			we get $2^{N}$ rows. This search space grows exponentially.
   		\item The faster method is to show that the union of the axioms and 
   			the negation of the conjecture is \textit{unsatisfiable}. 
   			$Ax \cup \neg C = \emptyset$
@@ -125,10 +142,11 @@
   \frametitle{Problem Statement}  
   \begin{block}{Problem Statement}
   	\begin{itemize}
-  		\item A problem consists of one conjecture to be proven, and a large 
-  			number of axioms to be considered.
-  		\item But the solution set(s) usually consist of a few axioms.
-  		\item How do we select the needed axioms?
+  		\item A \textit{large-theory} problem consists of a conjecture to be 
+  			proven, and a large number of axioms to be considered.
+  		\item However, the solution set(s) usually consist of a few axioms.
+  		\item How do we select the necessary axioms? This is known as the 
+  			problem of \textit{premise selection}.
   	\end{itemize}
   		
   	\begin{figure}[H]
@@ -140,39 +158,68 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Related Work}
 \frame{
-  \frametitle{Data Summary}  
-  \begin{block}{MPTPTP2078 Dataset}
+  \frametitle{Benchmark Data}  
+  \begin{block}{MPTP2078 Dataset}
   	\begin{itemize}
-  		\item \textbf{MP} = Mizar Problems \cite{Mizar-Urb06}	
+  	  	\item Thousands of Problems for Theorem Provers (TPTP) \cite{Sut17}
   		\begin{itemize}
-  	  		\item Library of problems in formalized mathematics, 
-  	  			in first-order logic
-  	  		\item Part of the Mizar System, which contains of a proof checker,
-  	  			and a language for writing mathematical definitions and proofs.
+			\item Standard set of test problems.	
   		\end{itemize}
-  		\item \textbf{TPTP} = Thousands of Problems for Theorem Provers
-  			\cite{Sut17}
-  		\item \textbf{MPTP} = Mizar Problems for Theorem Provers 
-  			\cite{Mizar-Urb06}
-  		\item Two versions of each problem
+  		\item Benchmark dataset of 2078 problems known as the 
+  			Mizar Problems for Theorem Provers (MPTP2078) \cite{AH14}.
+  			\begin{itemize}
+  	  		\item Encodes problems from the Mizar Mathematical Library (MML) 	
+  	  			of formalized mathematics into first-order logic form.
+  			\end{itemize}
+  		\item There are two versions of each problem:
   		\begin{itemize}
   			\item Bushy = smaller version (3 to 40 axioms, 1 to 15 needed)
   			\item Chainy = larger version (10 to 500 axioms, 2 to 119 needed)	
   		\end{itemize}
+  	\item Premise selection performance compared to state-of-the-art 
+  		Automated Theorem Provers: 
+  		\begin{itemize}
+  			\item E \cite{E-Sch13-LPAR}
+  			\item Vampire \cite{Vampire-KV13}
+  		\end{itemize}	
   	\end{itemize}	
   \end{block}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Related Work}
+\frame{
+  \frametitle{Graph Methods}  
+  \begin{block}{Minimal Proof Dependency}
+  	\begin{itemize}
+  		\item Alama et al. \cite{AH14}. constructed a knowledge base of
+  			minimal proof dependencies that a problem depends on and trained 
+  			kernel-based machine learning methods on a feature matrix
+  			representation of that knowledge base. 
+  		\item Minimal dependencies encoded as an adjacency matrix, where 
+  			the $(i,j)^{th}$ cell of the matrix has a value of 1 if the 
+  			$i^{th}$ formula of a problem is used in the proof of the 
+  			$j^{th}$ formula of a problem, and 0 otherwise.
+  		\item Formulate premise selection as a \textit{ranking problem}:
+  			\begin{itemize}
+  				\item Rank the axioms by how likely they are to prove a 
+  					conjecture (e.g. shared minimal dependencies).
+  				\item Choose a threshold value.
+  				\item Select all axioms whose score is above that threshold.
+  			\end{itemize}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \frame{
   \frametitle{Related Work}  
-  \begin{block}{Automated Theorem Proving (ATP) Systems}
+  \begin{block}{Hutchinson Distance}
   	\begin{itemize}
-  		\item E \cite{E-Sch13-LPAR}
-  		\item Vampire \cite{Vampire-KV13}
+  		\item Least Generalized Ancestor \cite{Hut97}
   	\end{itemize}	
   \end{block}
 }
