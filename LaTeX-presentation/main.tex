@@ -79,7 +79,7 @@
   \begin{block}{Definitions}
   	\begin{itemize}
   		\item What is Automated Theorem Proving (ATP)?
-  		\item \textit{Logical formulae} are statements about a domain:  		
+  		\item \textit{Logical formulae} are statements about a domain. 		
     	\item Show that the \textit{conjecture} is a 
     		\textit{logical consequence} of the axioms (a.k.a premises).	
 		\item Applications:
@@ -126,7 +126,7 @@
   			\textit{True}.
   		\item If we list all interpretations of $N$ formulae on a truth table, 
   			we get $2^{N}$ rows. This search space grows exponentially.
-  		\item The faster method is to show that the union of the axioms and 
+  		\item The faster way is to show that the union of the axioms and 
   			the negation of the conjecture is \textit{unsatisfiable}. 
   			$Ax \cup \neg C = \emptyset$
   		\item In other words, if no model of the axioms is a model of the
@@ -191,24 +191,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frame{
-  \frametitle{Graph Methods}  
-  \begin{block}{Minimal Proof Dependency}
+  \frametitle{Ranking Problem}  
+  \begin{block}{Ranking Problem}
   	\begin{itemize}
-  		\item Alama et al. \cite{AH14}. constructed a knowledge base of
-  			minimal proof dependencies that a problem depends on and trained 
-  			kernel-based machine learning methods on a feature matrix
-  			representation of that knowledge base. 
-  		\item Minimal dependencies encoded as an adjacency matrix, where 
-  			the $(i,j)^{th}$ cell of the matrix has a value of 1 if the 
-  			$i^{th}$ formula of a problem is used in the proof of the 
-  			$j^{th}$ formula of a problem, and 0 otherwise.
-  		\item Formulate premise selection as a \textit{ranking problem}:
+  		\item  Alama et al. \cite{AH14} formulated premise selection as a 
+  			\textit{ranking problem}:
   			\begin{itemize}
   				\item Rank the axioms by how likely they are to prove a 
-  					conjecture (e.g. shared minimal dependencies).
+  					conjecture, based on some kind of user-defined 
+  					similarity metric.
   				\item Choose a threshold value.
   				\item Select all axioms whose score is above that threshold.
   			\end{itemize}
+  		\item Also a \textit{classification problem}: 
+  			given a feature matrix consisting of the similarity values between 
+  			formulae in a problem, train different machine learning methods on
+  			the data to classify if an axiom is \textit{likely} or 
+  			\textit{unlikely} to be in the proof.
   	\end{itemize}	
   \end{block}
 }
@@ -221,7 +220,7 @@
   	\begin{itemize}
   		\item To construct an adjacency matrix, we require a measure of 
   			similarity or dissimilarity between each pair of nodes in a graph.
-  		\item Qinghua Liu \cite{Liu2017Metric} proposed a dissimilarity metric 
+  		\item Liu \cite{Liu2017Metric} proposed a dissimilarity metric 
   			between two terms $\Delta_{1}$ and $\Delta_{2}$, that extends 
   			the Hutchinson distance \cite{Hut97}.
   		\item Calculated by finding the Least Generalized Generalization 
@@ -290,8 +289,8 @@
 \section{Methodology}
 
 \frame{
-  \frametitle{Graph Theory}  
-  \begin{block}{Spectral Clustering}
+  \frametitle{Graph Matrices}  
+  \begin{block}{Graph Laplacian Matrix}
   	\begin{itemize}
   		\item Von Luxburg \cite{vonLuxburg2007} describes this technique to 
   			cluster vertices in an undirected graph according to some 
@@ -309,30 +308,6 @@
 		\begin{itemize}
 			\item $L_{norm} = I\ –\ (D^{-1/2}\ L\ D^{-1/2})$
 		\end{itemize}
-  	\end{itemize}	
-  \end{block}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\frame{
-  \frametitle{Methodology}  
-  \begin{block}{Graph Representation}
-  	\begin{itemize}
-  		\item Used Extended Hutchinson distance to get dissimilarity values 
-  			of all pairs of vertices in a problem.
-  		\item Let $\Phi_1$ and $\Phi_1$ represent two formulae with 
-  		dissimilarity of $dsim(\phi_i,\phi_j)$. We convert dissimilarity 
-  		values into similarity values using the following formula:
-  			\begin{itemize}
-  				\item $maxdsim(\mathcal{F}) = max_{\phi_i,\phi_j \in \mathcal{F}} (dsim(\phi_i,\phi_j) \neq \infty)$
-  				\item $sim(\Phi_1,\Phi_2,\mathcal{F}) = \textrm{max}(0, maxdsim(\mathcal{F}) - dsim(\Phi_1,\Phi_2))$
-  			\end{itemize}
-  		\item The logic problem becomes a fully-connected and undirected graph
-  		\begin{itemize}
-  			\item Vertices $V$ = $\{$Axioms $\cup$ Conjecture$\}$
-  			\item Edges $E$ = similarity values between vertices  		
-  		\end{itemize}
   	\end{itemize}	
   \end{block}
 }
@@ -393,15 +368,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frame{
-  \frametitle{Selection Method}  
-  \begin{block}{Spectral Clustering \cite{vonLuxburg2007}}
+  \frametitle{Methodology}  
+  \begin{block}{Graph Representation}
   	\begin{itemize}
-  		\item Given graph $G = (V, E)$
-  		\item Partition vertices in $V$ into $k$ clusters: 
-  			$C_{1}, C_{2}, ..., C_{k}$
-  		\item Denote the cluster containing the conjecture as $C_{C}$
-  		\item Problem may have more than one set of solutions 
-  		\item Succesful conjecture cluster only needs to contain one solution
+  		\item Used Extended Hutchinson distance to get dissimilarity values 
+  			of all pairs of vertices in a problem.
+  		\item Let $\Phi_1$ and $\Phi_1$ represent two formulae with 
+  		dissimilarity of $dsim(\phi_i,\phi_j)$. We convert dissimilarity 
+  		values into similarity values using the following formula:
+  			\begin{itemize}
+  				\item $maxdsim(\mathcal{F}) = max_{\phi_i,\phi_j \in \mathcal{F}} (dsim(\phi_i,\phi_j) \neq \infty)$
+  				\item $sim(\Phi_1,\Phi_2,\mathcal{F}) = \textrm{max}(0, maxdsim(\mathcal{F}) - dsim(\Phi_1,\Phi_2))$
+  			\end{itemize}
+  		\item The logic problem becomes a fully-connected and undirected graph
+  		\begin{itemize}
+  			\item Vertices $V$ = $\{$Axioms $\cup$ Conjecture$\}$
+  			\item Edges $E$ = similarity values between vertices  		
+  		\end{itemize}
   	\end{itemize}	
   \end{block}
 }
@@ -410,36 +393,135 @@
 
 \frame{
   \frametitle{Spectral Clustering Algorithm}  
-  \begin{block}{A Tutorial on Spectral Clustering \cite{vonLuxburg2007}}
-  	\begin{enumerate}
-    	\item Construct a weight matrix W (i.e. adjacency matrix A)
-  		\item Compute the normalized Laplacian matrix $L_{norm}$ from $W$
-		\item Compute the first $k$ eigenvectors $v_{1}, ..., v_{k}$ of 
-			$L_{norm}$ and construct a feature matrix $U$ from those 
-			eigenvectors
-		\item For $i = 1, ..., n$, let $p_{i}$ be the feature vector for the
-			$i^{th}$ vertex, corresponding to the $i^{th}$ row of $U$
-		\item Cluster the vertices based on their feature vectors into 
-			$k$ clusters: $C_{1}, C_{2}, ..., C_{k}$
-  	\end{enumerate}
+  \begin{block}{Spectral Clustering}
+  	\begin{itemize}
+  		\item A Tutorial on Spectral Clustering \cite{vonLuxburg2007}
+  		\begin{enumerate}
+    		\item Construct a weight matrix W (i.e. adjacency matrix A) 
+    		containing similarity values of the edges of the graph.
+  			\item Compute the normalized Laplacian matrix $L_{norm}$ from $W$.
+			\item Compute the first $k$ eigenvectors $v_{1}, ..., v_{k}$ of 
+				$L_{norm}$ and construct a feature matrix $U$ from those 
+				eigenvectors.
+			\item For $i = 1, ..., n$, let $p_{i}$ be the feature vector for 
+				the $i^{th}$ vertex, corresponding to the $i^{th}$ row of $U$.
+			\item Cluster the vertices based on their feature vectors into 
+				$k$ clusters: $C_{1}, C_{2}, ..., C_{k}$. Denote the cluster 
+				containing the conjecture as $C_{C}$.
+  		\end{enumerate}
+  		
+  		\item A problem may have more than one set of solutions, but the 
+	  		conjecture cluster needs only to contain the axioms for one 
+	  		solution to be deemed a successful clustering.
+  	\end{itemize}
   \end{block}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frame{
-  \frametitle{Spectral Clustering Algorithm}  
-  \begin{block}{K-Means Initialization Problem}
+  \frametitle{K-Means Clustering}  
+  \begin{block}{K-Means Clustering Problems}
   	\begin{enumerate}[5]
-    	\item Cluster the feature vectors into k clusters: C1, C2, … , Ck
+    	\item Cluster the vertices based on their feature vectors into $k$ 
+    		clusters: $C_{1}, C_{2}, ..., C_{k}$.
   		\begin{itemize}
   			\item Each run of k-means chooses a different set of initial 
-  				centroids for the $k$ clusters
-			\item Results in different clusterings each run
-			\item We need a deterministic way of clustering that doesn’t 
-				change over multiple runs of k-means
+  				centroids for the $k$ clusters.
+			\item Results in different clusterings each run.
   		\end{itemize}
   	\end{enumerate}
+  	\begin{itemize}
+  	  	\item We need a deterministic way of clustering that doesn’t 
+			change over multiple runs of k-means.
+		\item We also need to figure out the optimal value for the parameter 
+			$k$, the number of clusters.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{K-Means Clustering}  
+  \begin{block}{Solution to Initial Centroids Problem}
+  	\begin{itemize}
+    	\item Solution description here.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{K-Means Clustering}  
+  \begin{block}{Solution to Number of Clusters Problem}
+  	\begin{itemize}
+    	\item Solution description here.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Prediction of Optimal Number of Clusters}  
+  \begin{block}{Median Regression}
+  	\begin{itemize}
+    	\item Method description here.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Evaluation Metrics}  
+  \begin{block}{Evaluation Metrics}
+  	\begin{itemize}
+    	\item Selectivity
+    	\item Precision Score
+    	\item Adequacy
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+\frame{
+  \frametitle{Results}  
+  \begin{block}{Predicted Number of Clusters}
+  	\begin{itemize}
+    	\item Result description here.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+\frame{
+  \frametitle{Results}  
+  \begin{block}{Evaluation on Bushy and Chainy Problems}
+  	\begin{itemize}
+    	\item Result description here.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+\frame{
+  \frametitle{Conclusion}  
+  \begin{block}{Conclusion}
+  	\begin{itemize}
+    	\item Spectral clustering method extensions.
+    	\item Dissimilarity method extensions.
+    	\item Mention paper submitted to conference name.
+    	\item Thanks to Qinghua Liu, Zihao Wang, and Dr. Geoff Sutcliffe.
+  	\end{itemize}
   \end{block}
 }
 
