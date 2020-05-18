@@ -576,12 +576,38 @@
 
 \frame{
   \frametitle{Results}  
-  \begin{block}{Evaluation on Bushy and Chainy Problems}
-  	\begin{itemize}
-    	\item Result description here.
-  	\end{itemize}
+  \begin{block}{Evaluation on 325 Bushy and Chainy Problems}
+    \begin{figure}[H]
+  		\vspace*{0.1in}
+		\centering
+		\includegraphics[scale=0.38]{figures/result-325-problems.png}
+		\vspace*{0.1in}
+  	\end{figure}
   \end{block}
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Results}  
+  \begin{block}{Evaluation on 325 Bushy and Chainy Problems}
+    \begin{itemize}
+    	\item Spectral Clustering is more selective than E and Vampire. 
+    		However, this lead it to perform the worst in terms of selecting
+    		an adequate set of axioms, for both Bushy and Chainy problems.
+    	\item Spectral Clustering performs equally as well as E and Vampire
+    		in terms of precision for the problems on which it selects an
+    		adequate set of axioms, for both Bushy and Chainy problems.
+    		This means when Spectral Clustering does select an adequate set,
+    		it is good at removing unnecessary axioms.
+    	\item $Q_{\infty}$ is Qinghua's method of removing all axioms with
+    		infinite dissimilarity to the conjecture. It's a simple method 
+    	 	that performs very well, beating Vampire in terms of selectivity
+    	 	and on par with Vampire in terms of precision.
+    \end{itemize}
+  \end{block}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
@@ -597,9 +623,8 @@
     	\item If the ranking metric is not good, then it affects everything
     		downstream. Therefore, the next step is to validate different
     		ranking metrics, including the Extended Hutchinson Distance.
-    	\item Recent work is being done with graph convolutional neural 
-    		networks to rank the likelihood of axioms contributing towards a
-    		proof. However, these models also depend on a good ranking metric.
+    	\item Sometimes the simple method (e.g. $Q_{\infty}$) performs better
+    		than the complex method (e.g. Spectral Clustering).
   	\end{itemize}
   \end{block}
 }
