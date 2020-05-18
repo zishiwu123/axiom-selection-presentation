@@ -217,10 +217,53 @@
 
 \frame{
   \frametitle{Related Work}  
-  \begin{block}{Hutchinson Distance}
+  \begin{block}{Extended Hutchinson Distance}
   	\begin{itemize}
-  		\item Least Generalized Ancestor \cite{Hut97}
+  		\item To construct an adjacency matrix, we require a measure of 
+  			similarity or dissimilarity between each pair of nodes in a graph.
+  		\item Used a dissimilarity metric between two terms $\Delta_{1}$ and 
+  			$\Delta_{2}$, invented by Qinghua Liu, that extends the 
+  			Hutchinson distance \cite{Hut97}.
+  		\item Calculated by finding the Least Generalized Generalization 
+  			(\textit{lgg}) between two formulae. A term $\Delta$ is the 
+  			\textit{lgg} of $\Delta_{1}$ and $\Delta_{2}$ iff
+  			\begin{itemize}
+  				\item There are substitutions $\theta_{1}$ and $\theta_{2}$
+  					such that $\Delta \theta_{1} = \Delta_{1}$ and 
+  					$\Delta \theta_{2} = \Delta_{2}$.
+  				\item There exists no term $\Delta'$ and substitutions
+  					$\sigma$, $\sigma_{1}$ and $\sigma_{2}$ such that 
+  					$\Delta \sigma_{1} = \Delta'$ and 
+  					$\Delta \sigma_{2} = \Delta'$.
+  			\end{itemize}
   	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Related Work}  
+  \begin{block}{Extended Hutchinson Distance}
+  	\begin{itemize}
+  		\item If there is no Least Generalized Generalization $\Delta$
+  			between two terms $\Delta_{1}$ and $\Delta_{2}$, then their 
+  			extended Hutchinson distance is $\infty$. Formally,
+  			\textit{dissimilarity}($\Delta_{1}$, $\Delta_{1}$) $= \infty$
+  				iff $lgg(\Delta_{1}, \Delta_{2}) = \emptyset$
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Related Work}  
+  \begin{block}{Least Generalized Generalization Example}
+  	\begin{figure}[H]
+  		\centering
+		\includegraphics[scale=0.53]{figures/least-generalized-generalization-example.png}
+  	\end{figure}
   \end{block}
 }
 
