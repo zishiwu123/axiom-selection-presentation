@@ -196,8 +196,8 @@
   \frametitle{Ranking Problem}  
   \begin{block}{Ranking Problem}
   	\begin{itemize}
-  		\item  Alama et al. \cite{AH14} formulated premise selection as a 
-  			\textit{ranking problem}:
+  		\item Formulate premise selection as a \textit{ranking problem} 
+  			\cite{PB10, AH14}:
   			\begin{itemize}
   				\item Rank the axioms by how likely they are to prove a 
   					conjecture, based on some kind of user-defined 
@@ -290,7 +290,6 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Methodology}
 
 \frame{
   \frametitle{Graph Matrices}  
@@ -370,6 +369,69 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methodology}
+
+\frame{
+  \frametitle{Evaluation Metrics}  
+  \begin{block}{Definitions}
+	\begin{itemize}
+		\item The \emph{N}umber of \emph{Ax}ioms in a \emph{P}roblem: 		
+			\emph{NAxP}.
+		\item The \emph{N}umber of axioms \emph{Sel}ected: \emph{NSel}.
+		\item The \emph{N}umber of axioms \emph{N}eeded \emph{f}or a 
+			\emph{P}roof, i.e., the number of axioms in an adequate set
+			\emph{NNfP}.
+	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Evaluation Metrics}  
+  \begin{block}{Precision and Selectivity Metrics}
+  	\begin{itemize}
+  	  	\item \textbf{Precision} \\
+			If the axiom selection technique selects an adequate set of 
+				axioms (i.e. set that is known to lead to a proof), then 
+				\textbf{precision} is the minimum \emph{NNfP}$/$\emph{NSel} 
+				over the known adequate sets of axioms. \\
+				
+			Otherwise, if it selects an inadequate set, then 
+				\textbf{precision} is $0$. \\
+				
+			Larger values are better because it means that fewer 
+				unnecessary axioms were selected.
+		
+		\item \textbf{Selectivity}: \emph{NSel}$\ /$\ \emph{NAxP} \\
+		  	The fraction of axioms selected from the problem, regardless of
+		  	whether an adequate set was selected or not. Smaller values are 
+		  	better.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Evaluation Metrics}  
+  \begin{block}{Average and Adequacy Metrics}
+  	\begin{itemize}
+  		\item \textbf{Average precision/selectivity/ranking precision} \\
+  			For a set of problems, the average value of the metric over the
+  			problems.
+		\item \textbf{Adequacy} \\
+		  	For a set of problems, the fraction of problems for which the 
+		  	axiom selection technique selects an adequate set of axioms.
+		  	Larger values are better.
+  		\item \textbf{Adequate precision/selectivity/ranking precision} \\
+			For a set of problems, the average over the problems for which the 
+			axiom selection technique selects an adequate set of axioms.
+  	\end{itemize}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frame{
   \frametitle{Methodology}  
@@ -397,9 +459,7 @@
 
 \frame{
   \frametitle{Spectral Clustering Algorithm}  
-  \begin{block}{Spectral Clustering}
-  	\begin{itemize}
-  		\item A Tutorial on Spectral Clustering \cite{vonLuxburg2007}
+  \begin{block}{Spectral Clustering \cite{vonLuxburg2007}}
   		\begin{enumerate}
     		\item Construct a weight matrix W (i.e. adjacency matrix A) 
     		containing similarity values of the edges of the graph.
@@ -412,12 +472,7 @@
 			\item Cluster the vertices based on their feature vectors into 
 				$k$ clusters: $C_{1}, C_{2}, ..., C_{k}$. Denote the cluster 
 				containing the conjecture as $C_{C}$.
-  		\end{enumerate}
-  		
-  		\item A problem may have more than one set of solutions, but the 
-	  		conjecture cluster needs only to contain the axioms for one 
-	  		solution to be deemed a successful clustering.
-  	\end{itemize}
+  		\end{enumerate}		
   \end{block}
 }
 
@@ -425,7 +480,7 @@
 
 \frame{
   \frametitle{K-Means Clustering}  
-  \begin{block}{K-Means Clustering Problems}
+  \begin{block}{Problems with K-Means Clustering}
   	\begin{enumerate}[5]
     	\item Cluster the vertices based on their feature vectors into $k$ 
     		clusters: $C_{1}, C_{2}, ..., C_{k}$.
@@ -436,10 +491,10 @@
   		\end{itemize}
   	\end{enumerate}
   	\begin{itemize}
-  	  	\item We need a deterministic way of clustering that doesn’t 
-			change over multiple runs of k-means.
-		\item We also need to figure out the optimal value for the parameter 
-			$k$, the number of clusters.
+  	  	\item First, we need a deterministic way of initializing the centroids
+  	  		of the $k$ clusters.
+		\item Second, we need to figure out the optimal value for the 
+			parameter $k$, the number of clusters.
   	\end{itemize}
   \end{block}
 }
@@ -450,7 +505,12 @@
   \frametitle{K-Means Clustering}  
   \begin{block}{Solution to Initial Centroids Problem}
   	\begin{itemize}
-    	\item Solution description here.
+    	\item The \textit{degree centrality} of a vertex $v$ is the sum of the 
+    		weights of all the edges connected to $v$. 
+    	\item Rank the vertices in descending order by their degree centrality.
+    	\item Select the top $(k - 1)$ most central vertices and the 
+    		conjecture. Use their feature vectors from the matrix $U$ as the
+    		initial centroids for the $k$ clusters.
   	\end{itemize}
   \end{block}
 }
@@ -461,7 +521,10 @@
   \frametitle{K-Means Clustering}  
   \begin{block}{Solution to Number of Clusters Problem}
   	\begin{itemize}
-    	\item Solution description here.
+  		\item Let \emph{NAxP} denote the number of axioms in a logic problem.
+    	\item Brute force: try all values of $k$ from $2$ to \emph{NAxP}. 
+    	\item For each problem, record the $k$ number of clusters that gives
+    		us the best precision score.
   	\end{itemize}
   \end{block}
 }
@@ -550,7 +613,6 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Bibliography}
 
 \bibliographystyle{alpha}
 \bibliography{references}
