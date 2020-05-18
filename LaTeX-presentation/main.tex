@@ -221,9 +221,9 @@
   	\begin{itemize}
   		\item To construct an adjacency matrix, we require a measure of 
   			similarity or dissimilarity between each pair of nodes in a graph.
-  		\item Used a dissimilarity metric between two terms $\Delta_{1}$ and 
-  			$\Delta_{2}$, invented by Qinghua Liu, that extends the 
-  			Hutchinson distance \cite{Hut97}.
+  		\item Qinghua Liu \cite{Liu2017Metric} proposed a dissimilarity metric 
+  			between two terms $\Delta_{1}$ and $\Delta_{2}$, that extends 
+  			the Hutchinson distance \cite{Hut97}.
   		\item Calculated by finding the Least Generalized Generalization 
   			(\textit{lgg}) between two formulae. A term $\Delta$ is the 
   			\textit{lgg} of $\Delta_{1}$ and $\Delta_{2}$ iff
@@ -287,35 +287,20 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Methodology}
-\frame{
-  \frametitle{Methodology}  
-  \begin{block}{Data Representation}
-  	\begin{itemize}
-  		\item NOTE: this should be a comprehensive summary of the entire
-  			methodology, not details of one part
-  		\item Qinghua designed a dissimilarity metric \cite{Liu2017Metric}
-  		\item Problem is converted into an undirected fully-connected graph
-  		\begin{itemize}
-  			\item Vertices $V$ = $\{$Axioms $\cup$ Conjecture$\}$
-  			\item Edges $E$ = dissimilarity weights between vertices  		
-  		\end{itemize}
-  	\end{itemize}	
-  \end{block}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frame{
   \frametitle{Graph Theory}  
-  \begin{block}{Spectral Graph Theory \cite{Chung:1997}}
+  \begin{block}{Spectral Clustering}
   	\begin{itemize}
-  		\item Adjacency matrix $A$ consists of similarity values 
-  			between vertices
+  		\item Von Luxburg \cite{vonLuxburg2007} describes this technique to 
+  			cluster vertices in an undirected graph according to some 
+  			user-defined similarity metric.
+  		\item Adjacency matrix $A$ consists of edge weights between pairs 
+  			of vertices that represent their similarity.
   		\item Degree matrix $D$ is a diagonal matrix where the $i^{th}$ 
-  			element is the sum of the elements of the $i^{th}$ column of $A$
-  		\item Un-normalized Graph Laplacian matrix 
+  			element is the sum of the elements of the $i^{th}$ column of $A$.
+  		\item Un-normalized Graph Laplacian matrix.
 		\begin{itemize}
 			\item $L = D\ –\ A$
 		\end{itemize}
@@ -324,6 +309,30 @@
 		\begin{itemize}
 			\item $L_{norm} = I\ –\ (D^{-1/2}\ L\ D^{-1/2})$
 		\end{itemize}
+  	\end{itemize}	
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Methodology}  
+  \begin{block}{Graph Representation}
+  	\begin{itemize}
+  		\item Used Extended Hutchinson distance to get dissimilarity values 
+  			of all pairs of vertices in a problem.
+  		\item Let $\Phi_1$ and $\Phi_1$ represent two formulae with 
+  		dissimilarity of $dsim(\phi_i,\phi_j)$. We convert dissimilarity 
+  		values into similarity values using the following formula:
+  			\begin{itemize}
+  				\item $maxdsim(\mathcal{F}) = max_{\phi_i,\phi_j \in \mathcal{F}} (dsim(\phi_i,\phi_j) \neq \infty)$
+  				\item $sim(\Phi_1,\Phi_2,\mathcal{F}) = \textrm{max}(0, maxdsim(\mathcal{F}) - dsim(\Phi_1,\Phi_2))$
+  			\end{itemize}
+  		\item The logic problem becomes a fully-connected and undirected graph
+  		\begin{itemize}
+  			\item Vertices $V$ = $\{$Axioms $\cup$ Conjecture$\}$
+  			\item Edges $E$ = similarity values between vertices  		
+  		\end{itemize}
   	\end{itemize}	
   \end{block}
 }
