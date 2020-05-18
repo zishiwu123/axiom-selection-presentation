@@ -477,17 +477,11 @@
 \frame{
   \frametitle{K-Means Clustering}  
   \begin{block}{Problems with K-Means Clustering}
-  	\begin{enumerate}[5]
-    	\item Cluster the vertices based on their feature vectors into $k$ 
-    		clusters: $C_{1}, C_{2}, ..., C_{k}$.
-  		\begin{itemize}
-  			\item Each run of k-means chooses a different set of initial 
-  				centroids for the $k$ clusters.
-			\item Results in different clusterings each run.
-  		\end{itemize}
-  	\end{enumerate}
   	\begin{itemize}
-  	  	\item First, we need a deterministic way of initializing the centroids
+  		\item First, each run of k-means chooses a different set of initial 
+  			centroids for the $k$ clusters. This results in a different 
+  			clustering each time.
+  	  	\item We need deterministic way of initializing the centroids
   	  		of the $k$ clusters.
 		\item Second, we need to figure out the optimal value for the 
 			parameter $k$, the number of clusters.
@@ -515,12 +509,15 @@
 
 \frame{
   \frametitle{K-Means Clustering}  
-  \begin{block}{Solution to Number of Clusters Problem}
+  \begin{block}{Solution to Optimal Number of Clusters Problem}
   	\begin{itemize}
   		\item Let \emph{NAxP} denote the number of axioms in a logic problem.
     	\item Brute force: try all values of $k$ from $2$ to \emph{NAxP}. 
     	\item For each problem, record the $k$ number of clusters that gives
-    		us the best precision score.
+    		us the best \textbf{precision} value. Call this the optimal $k$.
+    	\item Recall that \textbf{precision} is \textit{the minimum number of 
+    		axioms needed for a proof} divided by \textit{the number of axioms 
+    		selected by the axiom selection technique}.
   	\end{itemize}
   \end{block}
 }
@@ -528,10 +525,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \frame{
-  \frametitle{Prediction of Optimal Number of Clusters}  
+  \frametitle{Predict Optimal Number of Clusters}  
   \begin{block}{Median Regression}
   	\begin{itemize}
-    	\item Method description here.
+    	\item Use median regression to create a regression line where the 
+    		y-axis is the optimal $k$ and the x-axis is the number of axioms
+    		in the problem.
+    	\item For each problem, use the regression line to predict the optimal 
+    		$k$ based on the number of axioms in the problem. Denote the 
+    		predicted value as $k_{pred}$.
+    	\item For each problem, run spectral clustering using $k_{pred}$ and 
+    		record the precision, selectivity, and adequacy.
   	\end{itemize}
   \end{block}
 }
@@ -541,10 +545,23 @@
 
 \frame{
   \frametitle{Results}  
-  \begin{block}{Predicted Number of Clusters}
-  	\begin{itemize}
-    	\item Result description here.
-  	\end{itemize}
+  \begin{block}{Predicted Number of Clusters for Bushy}
+  	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{figures/median-regression-optimal-k-bushy.png}
+  	\end{figure}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Results}  
+  \begin{block}{Predicted Number of Clusters for Chainy}
+  	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{figures/median-regression-optimal-k-chainy.png}
+  	\end{figure}
   \end{block}
 }
 
@@ -586,11 +603,16 @@
   \frametitle{Acknowledgements}  
   \begin{block}{Acknowledgements}
   	\begin{itemize}
-    	\item Thanks to Qinghua Liu, Zihao Wang, Dr. Geoff Sutcliffe, and
-    		Dr. Kamal Premaratne.
-    	\item Our paper \textit{Evaluation of Axiom Selection Techniques}
+  	    \item Our paper \textit{Evaluation of Axiom Selection Techniques}
     		was submitted to PAAR 2020 (Workshop on Practical Aspects of 
     		Automated Reasoning) in May 2020.
+    	\item Thanks to co-authors: Qinghua Liu, Zihao Wang, 
+    		Professor Geoff Sutcliffe.
+    	\item Thanks to Jack McKeown for suggesting the use of quantile 
+    		regression. At the $50^{th}$ quantile, this becomes median 
+    		regression.
+    	\item Thanks to Professor Kamal Premaratne for suggesting the use of 
+    		spectral clustering.
   	\end{itemize}
   \end{block}
 }
