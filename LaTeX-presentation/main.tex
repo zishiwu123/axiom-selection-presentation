@@ -244,21 +244,6 @@
 
 \frame{
   \frametitle{Related Work}  
-  \begin{block}{Extended Hutchinson Distance}
-  	\begin{itemize}
-  		\item If there is no Least Generalized Generalization $\Delta$
-  			between two terms $\Delta_{1}$ and $\Delta_{2}$, then their 
-  			extended Hutchinson distance is $\infty$. Formally,
-  			\textit{dissimilarity}($\Delta_{1}$, $\Delta_{1}$) $= \infty$
-  				iff $lgg(\Delta_{1}, \Delta_{2}) = \emptyset$
-  	\end{itemize}	
-  \end{block}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\frame{
-  \frametitle{Related Work}  
   \begin{block}{Least Generalized Generalization Example}
   	\begin{itemize}
   	  	\item Note that the substitutions $\theta_{1}$ and $\theta_{2}$ are 
@@ -269,6 +254,35 @@
   		\centering
 		\includegraphics[scale=0.53]{figures/least-generalized-generalization-example.png}
   	\end{figure}
+  \end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{
+  \frametitle{Related Work}  
+  \begin{block}{Extended Hutchinson Distance}
+  	\begin{itemize}
+  		\item If there is no Least Generalized Generalization $\Delta$
+  			between two terms $\Delta_{1}$ and $\Delta_{2}$, then their 
+  			extended Hutchinson distance is $\infty$. Formally,
+  			\textit{dissimilarity}($\Delta_{1}$, $\Delta_{1}$) $= \infty$
+  				iff $lgg(\Delta_{1}, \Delta_{2}) = \emptyset$.
+  		\item If there exists a Least Generalized Generalization $\Delta$
+  			between two terms $\Delta_{1}$ and $\Delta_{2}$, then the 
+  			Extended Hutchinson Distance says:
+  				\begin{itemize} 
+  					\item More total substitutions required (from the 
+  					\textit{lgg} to both terms) equates to a higher 
+  						dissimilarity score.
+  					\item Fewer total substitutions required equates to a 
+  						lower dissimilarity score.
+  				\end{itemize}
+  		\item Note that this is a simplication of Qinghua's actual metric,
+  			which is more complicated.
+  		\item As expected, for any term $\Delta_{1}$,
+			\textit{dissimilarity($\Delta_{1}$, $\Delta_{1})$} = 0
+  	\end{itemize}	
   \end{block}
 }
 
