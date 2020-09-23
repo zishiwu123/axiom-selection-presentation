@@ -1,0 +1,10 @@
+# ignore compiled LaTeX files
+*/*.aux
+*/*.bbl
+*/*.blg
+*/*.dvi
+*/*.log
+*/*.out
+*/*.synctex.gz
+*/*.tex.bak
+*/*.bib.bak
